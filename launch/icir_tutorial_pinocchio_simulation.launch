@@ -1,0 +1,31 @@
+<launch>
+  <arg name="pub_mode" default="false"/>
+  
+  <!-- mujoco -->
+  <node name="mujoco_ros" pkg="mujoco_ros" type="mujoco_ros" required="true" respawn="false" output="screen">
+    <param name="license" type="string" value="$(env HOME)/.mujoco/mjkey.txt" />
+    <param name="pub_mode" value="$(arg pub_mode)"/>
+    <param name="model_file" type="string" value="$(find icir_gen3_description)/6dof/urdf/kinova_arm_6dof.xml"/>    
+  </node>
+
+  <!-- controller -->    
+  <node name="icir_tutorial_pinocchio_simulation" pkg="icir_tutorial_pinocchio" args="-keyboard" type="icir_tutorial_pinocchio_simulation" output="screen">
+  </node>
+  
+  <!-- for pinocchio -->
+  <param name="urdf_path" type="string" value="$(find icir_gen3_description)"/>
+  <param name="urdf_name" type="string" value="/6dof/urdf/GEN3-6DOF_VISION_URDF_ARM_V01.urdf"/>  
+
+  <!-- robot publish -->    
+  <param name="robot_description" textfile="$(find icir_gen3_description)/6dof/urdf/GEN3-6DOF_VISION_URDF_ARM_V01.urdf" />      
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen">
+          <param name="use_tf_static"     value="false"/>
+          <param name="publish_frequency" value="100"/>
+          <param name="ignore_timestamp" value="true"/>
+          <remap from="joint_states"     to="mujoco_ros/mujoco_ros_interface/joint_states" />
+  </node>
+
+  <!-- rqt_gui -->    
+  <node name="rqt" pkg="rqt_gui" type="rqt_gui" args="--perspective-file $(find icir_tutorial_pinocchio)/rqt/icir_tutorial_pinocchio.perspective" output="screen"/>    
+
+</launch>
