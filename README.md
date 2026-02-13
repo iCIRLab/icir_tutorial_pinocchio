@@ -43,9 +43,9 @@ mkdir .mujoco
 
 ## 2. Prerequisites
 ```bash
-git clone https://github.com/jspark861102/icir_gen3_robot_description.git
-git clone https://github.com/jspark861102/kimm_mujoco_ros.git -b melodic
-git clone https://github.com/jspark861102/icir_tutorial_pinocchio.git
+git clone https://github.com/iCIRLab/icir_gen3_robot_description.git
+git clone https://github.com/iCIRLab/icir_mujoco_ros.git 
+git clone https://github.com/iCIRLab/icir_tutorial_pinocchio.git
 ```
 
 ## 3. Run
