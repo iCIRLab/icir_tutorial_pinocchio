@@ -43,6 +43,10 @@ int main(int argc, char **argv)
     Data data(model_);
     data_ = data;
 
+    cout << "nq : " << robot_->nq() << endl;
+    cout << "nv : " << robot_->nv() << endl;
+    cout << "na : " << robot_->na() << endl;
+
     // Control Variable
     ctrl_mode_ = 0;
     chg_flag_ = false;
@@ -61,6 +65,19 @@ int main(int argc, char **argv)
     m_a_ref = Motion(m_a.setZero());
     m_frame_id = model_.getFrameId("Actuator6");    
     m_joint_id = model_.getJointId("Actuator6");    
+    cout << "m_frame_id : " << m_frame_id << endl;
+    cout << "m_joint_id : " << m_joint_id << endl;
+    
+    cout << "nframes : " << model_.nframes << endl;
+    for (pinocchio::FrameIndex i = 0; i < model_.nframes; ++i)
+    {
+    const auto & f = model_.frames[i];
+    std::cout << "Frame ID: " << i
+              << ", Name: " << f.name
+              << ", Type: " << f.type
+              << ", Parent Joint: " << f.parent
+              << std::endl;
+    }
     ////////////////////////////////////////////////////////////////////////////////////////      
 
     Home << 0.00, 45.0, 90.0, 0.0, 45.0, -90.0;
@@ -168,11 +185,15 @@ int main(int argc, char **argv)
             robot_->frameClassicAcceleration(data_, m_frame_id, m_drift); //m_drift in local frame which is identical to J_dot * q_dot            
             robot_->jacobianWorld(data_, m_joint_id, state_.J);           //jacobian in global frame     
             robot_->frameJacobianLocal(data_, m_frame_id, m_J_local_);    //frame jacobian in local frame
-            
+
+            // cout << "robot_->position(data_, m_joint_id)" << robot_->position(data_, m_joint_id) << endl;
+            // cout << "robot_->framePosition(data_, m_frame_id, oMi)" << oMi << endl;
+
             SE3ToVector(oMi, m_p_);                                       // current pos in vector form            
             errorInSE3(oMi, m_M_ref, m_p_error);                          // pos erorr represented in local frame, oMi_inv*m_M_ref                                    
 
             // Transformation from local to world
+            m_wMl.translation(oMi.translation());                               // use rotation only for vel&acc transformation
             m_wMl.rotation(oMi.rotation());                               // use rotation only for vel&acc transformation
 
             m_p_error_vec = m_p_error.toVector();                         // pos err vector in local frame            

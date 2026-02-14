@@ -62,14 +62,14 @@ SE3 RobotWrapper::framePosition(const Data & data, const Model::FrameIndex index
 {
     assert(index<m_model.frames.size());
     const Frame & f = m_model.frames[index];
-    return data.oMi[f.parent].act(f.placement);
+    return data.oMi[f.parent].act(f.placement);    
 }
 
 void RobotWrapper::framePosition(const Data & data, const Model::FrameIndex index, SE3 & framePosition) const
 {
     assert(index<m_model.frames.size());
     const Frame & f = m_model.frames[index];
-    framePosition = data.oMi[f.parent].act(f.placement);
+    framePosition = data.oMi[f.parent].act(f.placement);    
 }
 
 Motion RobotWrapper::frameVelocity(const Data & data, const Model::FrameIndex index) const
@@ -83,7 +83,7 @@ void RobotWrapper::frameVelocity(const Data & data, const Model::FrameIndex inde
 {
     assert(index<m_model.frames.size());
     const Frame & f = m_model.frames[index];
-    frameVelocity = f.placement.actInv(data.v[f.parent]);
+    frameVelocity = f.placement.actInv(data.v[f.parent]);    
 }
 
 Motion RobotWrapper::frameAcceleration(const Data & data, const Model::FrameIndex index) const
